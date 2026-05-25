@@ -2,7 +2,6 @@ import pygame
 import Mundo
 import objetos
 import slots
-import palavra
 
 pygame.init()
 
