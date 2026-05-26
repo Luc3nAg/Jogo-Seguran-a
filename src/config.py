@@ -3,8 +3,8 @@ import pygame
 # ==============================================================================
 # RESOLUÇÕES E DIMENSÕES
 # ==============================================================================
-SCREEN_W = 1024
-SCREEN_H = 800
+SCREEN_W = 1280
+SCREEN_H = 720
 CANVAS_W = 1024
 CANVAS_H = 800
 
@@ -64,88 +64,78 @@ PATH_PENDRIVE = './imagens/pendrive.png'
 PATH_NOTEPAD = './imagens/bloc_de_notas.png'
 PATH_SPRITES_BOSS = './imagens/sprites chefe/chefe-idle{i}.png'
 PATH_SPRITES_INTERN = './imagens/sprites estagiario/estagiario-idle{i}.png'
+PATH_ICON_BOSS = './imagens/icones/icone chefe.png'
+PATH_ICON_DRAWER = './imagens/icones/gaveta cheia.png'
 
 # ==============================================================================
 # DIÁLOGOS DE ZOOM (OVERLAYS)
 # ==============================================================================
 OVERLAYS_DATA = {
     "postit": {
-        "title": "ZOOM: POST-IT NO BLOCO DE NOTAS",
+        "title": "ZOOM: POST-IT AO LADO DA MAQUINA",
         "lines": [
-            [("Um post-it amarelo esta colado no", False)],
-            [("bloco de notas com anotacoes.", False)],
-            [("Nele, ha uma anotacao da ", False), ("Senha", "Senha"), (":", False)],
-            [("A senha do servidor e ", False), ("1234", "1234"), (".", False)]
+            [("Um post-it esta colado ao lado", False)],
+            [("da maquina do estagiario.", False)],
+            [("Nele, ha a ", False), ("Senha", "Senha"), (" de acesso do", False)],
+            [("Estagiário", "Estagiário"), (": ", False), ("senh@forte123", "senh@forte123"), (".", False)]
         ]
     },
     "bulletin_board": {
         "title": "ZOOM: QUADRO KANBAN DA SPRINT",
         "lines": [
-            [("O quadro Kanban detalha as operacoes", False)],
-            [("programadas da startup.", False)],
-            [("Na coluna Concluido, a tarefa diz:", False)],
-            [("'Agendado: ", False), ("Server Reset", "Server Reset"), (" do servidor", False)],
-            [("as 03:00 AM'. O script de logs", False)],
-            [("forcava um shutdown, gerando uma", False)],
-            [("Reinicialização", "Reinicialização"), (" completa do sistema.", False)],
-            [("O plano original era so o ", False), ("Apagamento", "Apagamento"), (".", False)]
+            [("O quadro Kanban detalha a", False)],
+            [("infraestrutura da empresa.", False)],
+            [("Ela gerencia o armazenamento de", False)],
+            [("Dados", "Dados"), (" dos clientes na ", False), ("Nuvem", "Nuvem"), (".", False)]
         ]
     },
-    "pendrive": {
-        "title": "ZOOM: PENDRIVE NO CHAO DA SALA",
+    "gaveta": {
+        "title": "ZOOM: GAVETA DO CHEFE",
         "lines": [
-            [("Um dispositivo USB de metal", False)],
-            [("esta jogado no chao da sala.", False)],
-            [("Ao ler o conteudo dele, voce ve:", False)],
-            [("O script contido no ", False), ("Pendrive", "Pendrive"), (" e um", False)],
-            [("Script Malicioso", "Script Malicioso"), (" de automacao.", False)],
-            [("Ele foi programado para rodar", False)],
-            [("diretamente no ", False), ("Servidor", "Servidor"), (" central.", False)]
+            [("Voce abre a ", False), ("Gaveta", "Gaveta"), (" do ", False), ("Chefe", "Chefe"), (".", False)],
+            [("Dentro dela, ha um dispositivo USB", False)],
+            [("aparentemente largado as pressas:", False)],
+            [("Um ", False), ("Pendrive", "Pendrive"), (" suspeito contendo", False)],
+            [("arquivos criados recentemente.", False)]
         ]
     },
     "estagiario": {
         "title": "ZOOM: ESTAGIARIO ACUSADO",
         "lines": [
-            [("Estagiario: 'Eu juro que nao", False)],
-            [("deletei os dados do servidor!'", False)],
-            [("O Chefe esta furioso comigo,", False)],
-            [("mas eu nao fiz nada de errado.", False)],
-            [("Acho que o script que ele mesmo", False)],
-            [("configurou deu erro no Servidor.", False)],
-            [("Por favor, encontre as provas no", False)],
-            [("Terminal para me inocentar!'", False)]
+            [("Estagiario: 'Eu sou inocente!'", False)],
+            [("'Fui o primeiro a ser acusado,", False)],
+            [("mas eu nao fiz nada!'", False)],
+            [("'Alguem usou o meu computador'", False)],
+            [("'enquanto eu estava fora!'", False)]
         ]
     },
     "veteran": {
-        "title": "ZOOM: DEPOIMENTO DO CHEFE FURIOSO",
+        "title": "ZOOM: DEPOIMENTO DO SENIOR",
         "lines": [
-            [("Chefe Bob: 'A culpa e toda daquele", False)],
-            [("estagiario incompetente!'", False)],
-            [("'Eu, o ", False), ("Chefe", "Chefe"), (", mandei ele revisar logs.'", False)],
-            [("'Ele deve ter ativado algum ", False), ("Script", "Script"), ("'", False)],
-            [("no sistema por erro!'", False)],
-            [("'Toda a ", False), ("Culpa", "Culpa"), (" e dele! Ele derrubou'", False)],
-            [("o servidor central!'", False)]
+            [("Senior: 'Fui demitido e saio", False)],
+            [("em uma semana. Nao me importo com", False)],
+            [("essa investigacao da empresa.'", False)],
+            [("Ao lado dele, o seu ", False), ("Celular", "Celular"), (" pessoal", False)],
+            [("exibe uma ", False), ("Conversa", "Conversa"), (" de um", False)],
+            [("funcionario ", False), ("Sênior", "Sênior"), (" insatisfeito.", False)]
         ]
     },
     "logs_de_acesso": {
-        "title": "ZOOM: LOGS DE ACESSO DO CHEFE",
+        "title": "ZOOM: LOGS DO PC DO ESTAGIARIO",
         "lines": [
-            [("Voce analisa o computador do Chefe.", False)],
-            [("Na tela, estao abertos os logs.", False)],
-            [("Nele, o Chefe acusa o ", False), ("Estagiário", "Estagiário"), (" de", False)],
-            [("agir como o ", False), ("Atacante", "Atacante"), (" da invasao.", False)],
-            [("E exige: 'Verificar os ", False)],
-            [("Logs de Acesso", "Logs de Acesso"), (" urgente!'.", False)]
+            [("Ao verificar o log do ", False), ("PC", "PC"), (", voce", False)],
+            [("percebe uma atividade suspeita.", False)],
+            [("Houve a instalacao de um ", False), ("Malware", "Malware"), (",", False)],
+            [("que realizou o ", False), ("Vazamento", "Vazamento"), (" de", False)],
+            [("80% dos dados dos clientes.", False)]
         ]
     },
     "clock": {
         "title": "ZOOM: RELOGIO DE PAREDE",
         "lines": [
-            [("O relogio de parede parou de", False)],
-            [("funcionar subitamente.", False)],
-            [("Os ponteiros travados marcam", False)],
-            [("o horario exato da queda: ", False), ("03:00", "03:00"), (".", False)]
+            [("O relogio de parede marca o", False)],
+            [("Horário", "Horário"), (" exato do vazamento:", False)],
+            [("Os ponteiros pararam as ", False), ("03:00", "03:00"), (" AM.", False)]
         ]
     }
 }
@@ -154,15 +144,16 @@ OVERLAYS_DATA = {
 # NARRATIVA DA VITÓRIA
 # ==============================================================================
 STORY_LINES = [
-    "O Chefe Bob tentou de tudo para culpar o Estagiario pela queda,",
-    "mas as pistas revelaram a verdade dos fatos.",
+    "O Estagiario foi acusado pelo vazamento de 80% dos dados da nuvem,",
+    "ja que o ataque partiu do computador dele.",
     "",
-    "A senha obvia '1234' estava colada no monitor do proprio Chefe.",
-    "O pendrive no chao continha um script de automacao configurado",
-    "por ele mesmo para 'limpar os logs' da maquina as 03:00 AM.",
+    "No entanto, as investigacoes revelaram a verdade dos fatos.",
+    "O funcionario Senior, insatisfeito e subornado por terceiros,",
+    "obteve a senha 'senh@forte123' anotada em um post-it.",
     "",
-    "O script executou com erro e derrubou o servidor central,",
-    "fazendo os ponteiros do relogio congelarem no tempo.",
+    "Ele criou um Malware em um Pendrive e infectou a maquina do",
+    "estagiario, mas esqueceu o Pendrive em sua propria gaveta.",
     "",
-    "O Estagiario foi inocentado. O verdadeiro culpado foi revelado!"
+    "As conversas em seu Celular comprovaram toda a sua culpabilidade.",
+    "O Estagiario foi inocentado!"
 ]

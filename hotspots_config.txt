@@ -1,10 +1,10 @@
 # COPY-PASTE THIS BLOCK INTO Mundo.py INSIDE self.hotspots LIST:
         self.hotspots = [
-            Hotspot("pendrive", "Pendrive no Chao", pygame.Rect(1, 514, 51, 40)),
-            Hotspot("bulletin_board", "Quadro Kanban", pygame.Rect(462, 188, 146, 143)),
-            Hotspot("estagiario", "Estagiario (Acusado)", pygame.Rect(538, 327, 236, 207)),
-            Hotspot("postit", "Post-it no Bloco de Notas", pygame.Rect(3, 275, 49, 42)),
-            Hotspot("veteran", "Chefe Furioso", pygame.Rect(245, 291, 209, 238)),
-            Hotspot("logs_de_acesso", "Logs de Acesso (PC do Chefe)", pygame.Rect(26, 346, 64, 71)),
-            Hotspot("clock", "Relogio de Parede", pygame.Rect(614, 129, 95, 118)),
+            Hotspot("gaveta", "Gaveta do Chefe", pygame.Rect(12, 428, 56, 93)),
+            Hotspot("bulletin_board", "Quadro Kanban", pygame.Rect(463, 188, 146, 143)),
+            Hotspot("estagiario", "Estagiario (Acusado)", pygame.Rect(618, 320, 149, 213)),
+            Hotspot("postit", "Post-it no Bloco de Notas", pygame.Rect(85, 308, 45, 41)),
+            Hotspot("veteran", "Chefe Furioso", pygame.Rect(263, 294, 190, 240)),
+            Hotspot("logs_de_acesso", "Logs de Acesso (PC do Chefe)", pygame.Rect(29, 350, 66, 59)),
+            Hotspot("clock", "Relogio de Parede", pygame.Rect(639, 126, 100, 119)),
         ]

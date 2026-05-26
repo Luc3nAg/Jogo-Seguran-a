@@ -22,11 +22,11 @@ class GameEngine:
         self.canvas = pygame.Surface((config.CANVAS_W, config.CANVAS_H))
         
         # Parâmetros de escala e letterboxing padrão
-        self.scale_factor = 1.0
-        self.canvas_w = config.CANVAS_W
-        self.canvas_h = config.CANVAS_H
-        self.ox = 0
-        self.oy = 0
+        self.scale_factor = min(self.screen_w / config.CANVAS_W, self.screen_h / config.CANVAS_H)
+        self.canvas_w = int(config.CANVAS_W * self.scale_factor)
+        self.canvas_h = int(config.CANVAS_H * self.scale_factor)
+        self.ox = (self.screen_w - self.canvas_w) // 2
+        self.oy = (self.screen_h - self.canvas_h) // 2
         
         # Carrega fontes retro utilizando Consolas (garantida em sistemas Windows)
         self.font_title = pygame.font.SysFont("consolas", 40, bold=True)
@@ -40,14 +40,14 @@ class GameEngine:
         oy_term = 140
         
         self.slot_who = Slot("", ox_term + 55, oy_term + 70, 140, 30, "Estagiário", self.font_ui)
-        self.slot_how = Slot("", ox_term + 305, oy_term + 115, 140, 30, "Script", self.font_ui)
-        self.slot_pwd = Slot("", ox_term + 170, oy_term + 160, 100, 30, "1234", self.font_ui)
-        self.slot_where = Slot("", ox_term + 195, oy_term + 205, 140, 30, "Servidor", self.font_ui)
-        self.slot_why = Slot("", ox_term + 295, oy_term + 250, 180, 30, "Reinicialização", self.font_ui)
+        self.slot_how = Slot("", ox_term + 305, oy_term + 115, 140, 30, "Sênior", self.font_ui)
+        self.slot_pwd = Slot("", ox_term + 170, oy_term + 160, 160, 30, "senh@forte123", self.font_ui)
+        self.slot_where = Slot("", ox_term + 195, oy_term + 205, 100, 30, "PC", self.font_ui)
+        self.slot_why = Slot("", ox_term + 295, oy_term + 250, 140, 30, "Malware", self.font_ui)
         
-        self.slot_culprit = Slot("", ox_term + 125, oy_term + 350, 120, 30, "Chefe", self.font_ui)
-        self.slot_proof1 = Slot("", ox_term + 340, oy_term + 350, 200, 30, "Script Malicioso", self.font_ui)
-        self.slot_proof2 = Slot("", ox_term + 340, oy_term + 395, 200, 30, "1234", self.font_ui)
+        self.slot_culprit = Slot("", ox_term + 125, oy_term + 350, 120, 30, "Sênior", self.font_ui)
+        self.slot_proof1 = Slot("", ox_term + 340, oy_term + 350, 200, 30, "Pendrive", self.font_ui)
+        self.slot_proof2 = Slot("", ox_term + 340, oy_term + 395, 200, 30, "Celular", self.font_ui)
         
         self.investigation_slots = [
             self.slot_who, self.slot_how, self.slot_pwd, self.slot_where, self.slot_why,
@@ -85,7 +85,7 @@ class GameEngine:
         p1 = self.investigation_slots[6].item.text if self.investigation_slots[6].item else None
         p2 = self.investigation_slots[7].item.text if self.investigation_slots[7].item else None
         
-        provas_corretas = {"Script Malicioso", "1234"}
+        provas_corretas = {"Pendrive", "Celular"}
         if p1 in provas_corretas and p2 in provas_corretas and p1 != p2:
             return True
         return False

@@ -54,7 +54,7 @@ class World:
         except Exception as e:
             print("Erro ao carregar sprites do estagiario:", e)
             
-        # Carrega sprites adicionais de objetos
+        # Carrega sprites adicionais de objetos e ícones
         try:
             self.pendrive_image = pygame.image.load(config.PATH_PENDRIVE).convert_alpha()
         except Exception as e:
@@ -66,16 +66,28 @@ class World:
         except Exception as e:
             self.notepad_image = None
             print("Erro ao carregar bloc_de_notas.png:", e)
+
+        try:
+            self.icon_boss = pygame.image.load(config.PATH_ICON_BOSS).convert_alpha()
+        except Exception as e:
+            self.icon_boss = None
+            print("Erro ao carregar icone chefe.png:", e)
+
+        try:
+            self.icon_drawer = pygame.image.load(config.PATH_ICON_DRAWER).convert_alpha()
+        except Exception as e:
+            self.icon_drawer = None
+            print("Erro ao carregar gaveta cheia.png:", e)
             
         # Hitboxes configuradas de acordo com o cenário devs e o roteiro (depuração do usuário)
         self.hotspots = [
-            Hotspot("pendrive", "Pendrive no Chao", pygame.Rect(1, 514, 51, 40)),
-            Hotspot("bulletin_board", "Quadro Kanban", pygame.Rect(462, 188, 146, 143)),
+            Hotspot("gaveta", "Gaveta do Chefe", pygame.Rect(12, 428, 56, 93)),
+            Hotspot("bulletin_board", "Quadro Kanban", pygame.Rect(463, 188, 146, 143)),
             Hotspot("estagiario", "Estagiario (Acusado)", pygame.Rect(618, 320, 149, 213)),
-            Hotspot("postit", "Post-it no Bloco de Notas", pygame.Rect(3, 275, 49, 42)),
+            Hotspot("postit", "Post-it no Bloco de Notas", pygame.Rect(85, 308, 45, 41)),
             Hotspot("veteran", "Chefe Furioso", pygame.Rect(263, 294, 190, 240)),
-            Hotspot("logs_de_acesso", "Logs de Acesso (PC do Chefe)", pygame.Rect(26, 346, 64, 71)),
-            Hotspot("clock", "Relogio de Parede", pygame.Rect(614, 129, 95, 118)),
+            Hotspot("logs_de_acesso", "Logs de Acesso (PC do Chefe)", pygame.Rect(29, 350, 66, 59)),
+            Hotspot("clock", "Relogio de Parede", pygame.Rect(639, 126, 100, 119)),
         ]
         
         # Configurações dinâmicas de overlay
@@ -196,9 +208,9 @@ class World:
                 estag_surf = pygame.transform.scale(self.estagiario_frames[frame_idx], (estag_hs.rect.width, estag_hs.rect.height))
                 surface.blit(estag_surf, (estag_hs.rect.x + self.play_offset_x, estag_hs.rect.y + self.play_offset_y))
                 
-        # 5. Desenha o Pendrive (pendrive.png)
+        # 5. Desenha a Gaveta se houver imagem (opcional)
         if self.pendrive_image:
-            pen_hs = next((h for h in self.hotspots if h.name == "pendrive"), None)
+            pen_hs = next((h for h in self.hotspots if h.name == "gaveta"), None)
             if pen_hs:
                 pen_surf = pygame.transform.scale(self.pendrive_image, (pen_hs.rect.width, pen_hs.rect.height))
                 surface.blit(pen_surf, (pen_hs.rect.x + self.play_offset_x, pen_hs.rect.y + self.play_offset_y))
@@ -309,11 +321,18 @@ class World:
                         current_x += text_surf.get_width()
                         
             # Renderiza retratos de Zoom
-            if self.zoom_overlay == "veteran" and self.boss_zoom:
-                surface.blit(self.boss_zoom, (ox + 450, oy + 110))
+            if self.zoom_overlay == "veteran":
+                if self.icon_boss:
+                    boss_icon_scaled = pygame.transform.scale(self.icon_boss, (150, 150))
+                    surface.blit(boss_icon_scaled, (ox + 480, oy + 110))
+                elif self.boss_zoom:
+                    surface.blit(self.boss_zoom, (ox + 450, oy + 110))
             elif self.zoom_overlay == "estagiario" and self.estagiario_frames:
                 estag_zoom = pygame.transform.scale(self.estagiario_frames[0], (150, 200))
                 surface.blit(estag_zoom, (ox + 480, oy + 110))
+            elif self.zoom_overlay == "gaveta" and self.icon_drawer:
+                drawer_icon_scaled = pygame.transform.scale(self.icon_drawer, (150, 150))
+                surface.blit(drawer_icon_scaled, (ox + 480, oy + 110))
                          
         # Botão Fechar ("X")
         pygame.draw.rect(surface, config.COLOR_CLOSE_RED, self.close_btn_rect)
@@ -344,10 +363,10 @@ class World:
         # Linhas de Texto Fixas (para encaixar os slots de dedução de forma alinhada)
         # Linha 1 (Y = oy + 75)
         surface.blit(self.font_text.render("O", True, c_green), (ox + 30, oy + 75))
-        surface.blit(self.font_text.render("nao deletou os dados.", True, c_green), (ox + 205, oy + 75))
+        surface.blit(self.font_text.render("nao vazou os dados.", True, c_green), (ox + 205, oy + 75))
         
         # Linha 2 (Y = oy + 120)
-        surface.blit(self.font_text.render("O servidor caiu porque o", True, c_green), (ox + 30, oy + 120))
+        surface.blit(self.font_text.render("O ataque ocorreu porque o", True, c_green), (ox + 30, oy + 120))
         
         # Linha 3 (Y = oy + 165)
         surface.blit(self.font_text.render("usou a senha", True, c_green), (ox + 30, oy + 165))
@@ -356,8 +375,8 @@ class World:
         surface.blit(self.font_text.render("para acessar o", True, c_green), (ox + 30, oy + 210))
         
         # Linha 5 (Y = oy + 255)
-        surface.blit(self.font_text.render("e executar o comando de", True, c_green), (ox + 30, oy + 255))
-        surface.blit(self.font_text.render(".", True, c_green), (ox + 485, oy + 255))
+        surface.blit(self.font_text.render("e instalar o", True, c_green), (ox + 30, oy + 255))
+        surface.blit(self.font_text.render(".", True, c_green), (ox + 445, oy + 255))
         
         # Linha Divisória
         pygame.draw.line(surface, (0, 150, 45), (ox + 10, oy + 295), (ox + ow - 10, oy + 295), 2)
