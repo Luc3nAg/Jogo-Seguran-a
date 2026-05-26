@@ -82,10 +82,10 @@ class World:
         # Hitboxes configuradas de acordo com o cenário devs e o roteiro (depuração do usuário)
         self.hotspots = [
             Hotspot("gaveta", "Gaveta do Chefe", pygame.Rect(12, 428, 56, 93)),
-            Hotspot("bulletin_board", "Quadro Kanban", pygame.Rect(463, 188, 146, 143)),
-            Hotspot("estagiario", "Estagiario (Acusado)", pygame.Rect(618, 320, 149, 213)),
-            Hotspot("postit", "Post-it no Bloco de Notas", pygame.Rect(85, 308, 45, 41)),
-            Hotspot("veteran", "Chefe Furioso", pygame.Rect(263, 294, 190, 240)),
+            Hotspot("bulletin_board", "Quadro Kanban", pygame.Rect(463, 182, 146, 143)),
+            Hotspot("estagiario", "Estagiario (Acusado)", pygame.Rect(510, 322, 149, 213)),
+            Hotspot("postit", "Post-it no Bloco de Notas", pygame.Rect(667, 326, 45, 41)),
+            Hotspot("veteran", "Chefe Furioso", pygame.Rect(186, 293, 190, 240)),
             Hotspot("logs_de_acesso", "Logs de Acesso (PC do Chefe)", pygame.Rect(29, 350, 66, 59)),
             Hotspot("clock", "Relogio de Parede", pygame.Rect(639, 126, 100, 119)),
         ]
@@ -110,7 +110,7 @@ class World:
         
         # Botões de interface no canvas lógico
         self.close_btn_rect = pygame.Rect(820, 165, 30, 30)
-        self.btn_voltar_terminal = pygame.Rect(450, 595, 124, 35)
+        self.btn_voltar_terminal = pygame.Rect(450, 655, 124, 35)
         
         self.active_word_rects = []
 
@@ -346,7 +346,7 @@ class World:
         dark_overlay.fill((0, 0, 0, 210))
         surface.blit(dark_overlay, (self.play_offset_x, self.play_offset_y))
         
-        ox, oy, ow, oh = 192, 140, 640, 520
+        ox, oy, ow, oh = config.TERM_X, config.TERM_Y, config.TERM_W, config.TERM_H
         
         # Fundo CRT Verde Fosco
         pygame.draw.rect(surface, config.COLOR_CRT_BG, (ox, oy, ow, oh))
@@ -354,44 +354,44 @@ class World:
         pygame.draw.rect(surface, (0, 120, 40), (ox + 4, oy + 4, ow - 8, oh - 8), 1)
         
         # Cabeçalho do Terminal
-        tit_surf = self.font_ui.render(" TERMINAL DE RESOLUCAO DE INCIDENTES - SOC ", True, config.COLOR_CRT_GREEN)
+        tit_surf = self.font_ui.render(" TERMINAL DE RESOLUÇÃO DE INCIDENTES - SOC ", True, config.COLOR_CRT_GREEN)
         surface.blit(tit_surf, (ox + ow//2 - tit_surf.get_width()//2, oy + 15))
         pygame.draw.line(surface, (0, 150, 45), (ox + 10, oy + 40), (ox + ow - 10, oy + 40), 2)
         
         c_green = config.COLOR_CRT_GREEN_MID
         
         # Linhas de Texto Fixas (para encaixar os slots de dedução de forma alinhada)
-        # Linha 1 (Y = oy + 75)
-        surface.blit(self.font_text.render("O", True, c_green), (ox + 30, oy + 75))
-        surface.blit(self.font_text.render("nao vazou os dados.", True, c_green), (ox + 205, oy + 75))
+        # Linha 1 (Y = oy + 90)
+        surface.blit(self.font_text.render("O", True, c_green), (ox + 80, oy + 90))
+        surface.blit(self.font_text.render("não vazou os dados.", True, c_green), (ox + 255, oy + 90))
         
-        # Linha 2 (Y = oy + 120)
-        surface.blit(self.font_text.render("O ataque ocorreu porque o", True, c_green), (ox + 30, oy + 120))
+        # Linha 2 (Y = oy + 145)
+        surface.blit(self.font_text.render("O ataque ocorreu porque o", True, c_green), (ox + 80, oy + 145))
         
-        # Linha 3 (Y = oy + 165)
-        surface.blit(self.font_text.render("usou a senha", True, c_green), (ox + 30, oy + 165))
+        # Linha 3 (Y = oy + 200)
+        surface.blit(self.font_text.render("usou a senha", True, c_green), (ox + 80, oy + 200))
         
-        # Linha 4 (Y = oy + 210)
-        surface.blit(self.font_text.render("para acessar o", True, c_green), (ox + 30, oy + 210))
+        # Linha 4 (Y = oy + 255)
+        surface.blit(self.font_text.render("para acessar o", True, c_green), (ox + 80, oy + 255))
         
-        # Linha 5 (Y = oy + 255)
-        surface.blit(self.font_text.render("e instalar o", True, c_green), (ox + 30, oy + 255))
-        surface.blit(self.font_text.render(".", True, c_green), (ox + 445, oy + 255))
+        # Linha 5 (Y = oy + 310)
+        surface.blit(self.font_text.render("e instalar o", True, c_green), (ox + 80, oy + 310))
+        surface.blit(self.font_text.render(".", True, c_green), (ox + 380, oy + 310))
         
         # Linha Divisória
-        pygame.draw.line(surface, (0, 150, 45), (ox + 10, oy + 295), (ox + ow - 10, oy + 295), 2)
+        pygame.draw.line(surface, (0, 150, 45), (ox + 10, oy + 355), (ox + ow - 10, oy + 355), 2)
         
         # Título de Dedução de Culpabilidade
-        ev_title = self.font_ui.render(" QUADRO DE DEDUCAO E PROVAS: ", True, config.COLOR_CRT_GREEN)
-        surface.blit(ev_title, (ox + 15, oy + 310))
+        ev_title = self.font_ui.render(" QUADRO DE DEDUÇÃO E PROVAS: ", True, config.COLOR_CRT_GREEN)
+        surface.blit(ev_title, (ox + 35, oy + 375))
         
-        # Linha 6 (Y = oy + 355)
-        surface.blit(self.font_text.render("Culpado:", True, c_green), (ox + 30, oy + 355))
-        surface.blit(self.font_text.render("Provas:", True, c_green), (ox + 255, oy + 355))
+        # Linha 6 (Y = oy + 420)
+        surface.blit(self.font_text.render("Culpado:", True, c_green), (ox + 80, oy + 420))
+        surface.blit(self.font_text.render("Provas:", True, c_green), (ox + 305, oy + 420))
         
-        # Linha 7 (Y = oy + 400)
-        surface.blit(self.font_text.render("e", True, c_green), (ox + 315, oy + 400))
-        surface.blit(self.font_text.render(".", True, c_green), (ox + 545, oy + 400))
+        # Linha 7 (Y = oy + 475)
+        surface.blit(self.font_text.render("e", True, c_green), (ox + 365, oy + 475))
+        surface.blit(self.font_text.render(".", True, c_green), (ox + 595, oy + 475))
         
         # Botão Voltar
         pygame.draw.rect(surface, config.COLOR_CRT_BG_BUTTON, self.btn_voltar_terminal)

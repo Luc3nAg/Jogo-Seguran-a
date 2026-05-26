@@ -28,26 +28,35 @@ class GameEngine:
         self.ox = (self.screen_w - self.canvas_w) // 2
         self.oy = (self.screen_h - self.canvas_h) // 2
         
-        # Carrega fontes retro utilizando Consolas (garantida em sistemas Windows)
-        self.font_title = pygame.font.SysFont("consolas", 40, bold=True)
-        self.font_ui = pygame.font.SysFont("consolas", 18, bold=True)
-        self.font_text = pygame.font.SysFont("consolas", 20)
-        self.font_word = pygame.font.SysFont("consolas", 16, bold=True)
-        self.font_victory = pygame.font.SysFont("consolas", 22)
+        # Carrega fontes retro utilizando a fonte pixel VT323
+        font_path = "fontes/VT323-Regular.ttf"
+        try:
+            self.font_title = pygame.font.Font(font_path, 48)
+            self.font_ui = pygame.font.Font(font_path, 24)
+            self.font_text = pygame.font.Font(font_path, 26)
+            self.font_word = pygame.font.Font(font_path, 20)
+            self.font_victory = pygame.font.Font(font_path, 24)
+        except Exception as e:
+            print("Erro ao carregar fonte VT323, usando consolas:", e)
+            self.font_title = pygame.font.SysFont("consolas", 40, bold=True)
+            self.font_ui = pygame.font.SysFont("consolas", 18, bold=True)
+            self.font_text = pygame.font.SysFont("consolas", 20)
+            self.font_word = pygame.font.SysFont("consolas", 16, bold=True)
+            self.font_victory = pygame.font.SysFont("consolas", 18)
         
         # Inicializa os slots de investigação no Terminal de Sentenças
-        ox_term = 192
-        oy_term = 140
+        ox_term = config.TERM_X
+        oy_term = config.TERM_Y
         
-        self.slot_who = Slot("", ox_term + 55, oy_term + 70, 140, 30, "Estagiário", self.font_ui)
-        self.slot_how = Slot("", ox_term + 305, oy_term + 115, 140, 30, "Sênior", self.font_ui)
-        self.slot_pwd = Slot("", ox_term + 170, oy_term + 160, 160, 30, "senh@forte123", self.font_ui)
-        self.slot_where = Slot("", ox_term + 195, oy_term + 205, 100, 30, "PC", self.font_ui)
-        self.slot_why = Slot("", ox_term + 295, oy_term + 250, 140, 30, "Malware", self.font_ui)
+        self.slot_who = Slot("", ox_term + 105, oy_term + 85, 140, 30, "Estagiário", self.font_ui)
+        self.slot_how = Slot("", ox_term + 370, oy_term + 140, 140, 30, "Sênior", self.font_ui)
+        self.slot_pwd = Slot("", ox_term + 230, oy_term + 195, 160, 30, "senh@forte123", self.font_ui)
+        self.slot_where = Slot("", ox_term + 250, oy_term + 250, 100, 30, "PC", self.font_ui)
+        self.slot_why = Slot("", ox_term + 230, oy_term + 305, 140, 30, "Malware", self.font_ui)
         
-        self.slot_culprit = Slot("", ox_term + 125, oy_term + 350, 120, 30, "Sênior", self.font_ui)
-        self.slot_proof1 = Slot("", ox_term + 340, oy_term + 350, 200, 30, "Pendrive", self.font_ui)
-        self.slot_proof2 = Slot("", ox_term + 340, oy_term + 395, 200, 30, "Celular", self.font_ui)
+        self.slot_culprit = Slot("", ox_term + 175, oy_term + 415, 120, 30, "Chefe", self.font_ui)
+        self.slot_proof1 = Slot("", ox_term + 390, oy_term + 415, 200, 30, "Pendrive", self.font_ui)
+        self.slot_proof2 = Slot("", ox_term + 390, oy_term + 470, 200, 30, "Celular", self.font_ui)
         
         self.investigation_slots = [
             self.slot_who, self.slot_how, self.slot_pwd, self.slot_where, self.slot_why,
@@ -192,11 +201,11 @@ class GameEngine:
                 else:
                     self.hint_timer += 1
                     if (self.hint_timer // 20) % 2 == 0:
-                        hint_surf = self.font_ui.render("> ACESSO NEGADO: Parametros incorretos. Verifique as evidencias.", True, (255, 70, 60))
-                        self.canvas.blit(hint_surf, (config.CANVAS_W // 2 - hint_surf.get_width() // 2, 195))
+                        hint_surf = self.font_ui.render("> ACESSO NEGADO: Parâmetros incorretos. Verifique as evidências.", True, (255, 70, 60))
+                        self.canvas.blit(hint_surf, (config.CANVAS_W // 2 - hint_surf.get_width() // 2, config.TERM_Y + 52))
             else:
-                instr_surf = self.font_ui.render("> Arraste as pistas do rodape para as caixas de parametros.", True, config.COLOR_CRT_GREEN)
-                self.canvas.blit(instr_surf, (config.CANVAS_W // 2 - instr_surf.get_width() // 2, 195))
+                instr_surf = self.font_ui.render("> Arraste as pistas do rodapé para as caixas de parâmetros.", True, config.COLOR_CRT_GREEN)
+                self.canvas.blit(instr_surf, (config.CANVAS_W // 2 - instr_surf.get_width() // 2, config.TERM_Y + 52))
 
         # Desenha a moldura da viewport de jogo
         pygame.draw.rect(self.canvas, (65, 45, 30), (104, 112, 816, 616), 8)
