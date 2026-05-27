@@ -1,4 +1,15 @@
 import pygame
+import os
+import sys
+
+def get_path(relative_path):
+    """ Retorna o caminho absoluto do recurso, compatível com desenvolvimento e executável do PyInstaller """
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
 
 # ==============================================================================
 # RESOLUÇÕES E DIMENSÕES
@@ -65,13 +76,13 @@ COLOR_DEBUG_SELECTED_BORDER = (50, 220, 255)
 # ==============================================================================
 # CAMINHOS E ASSETS
 # ==============================================================================
-PATH_BG = './imagens/cenario.png'
-PATH_PENDRIVE = './imagens/pendrive.png'
-PATH_NOTEPAD = './imagens/bloc_de_notas.png'
-PATH_SPRITES_BOSS = './imagens/sprites chefe/chefe-idle{i}.png'
-PATH_SPRITES_INTERN = './imagens/sprites estagiario/estagiario-idle{i}.png'
-PATH_ICON_BOSS = './imagens/icones/icone chefe.png'
-PATH_ICON_DRAWER = './imagens/icones/gaveta cheia.png'
+PATH_BG = get_path('imagens/cenario.png')
+PATH_PENDRIVE = get_path('imagens/pendrive.png')
+PATH_NOTEPAD = get_path('imagens/bloc_de_notas.png')
+PATH_SPRITES_BOSS = get_path('imagens/sprites chefe/chefe-idle{i}.png')
+PATH_SPRITES_INTERN = get_path('imagens/sprites estagiario/estagiario-idle{i}.png')
+PATH_ICON_BOSS = get_path('imagens/icones/icone chefe.png')
+PATH_ICON_DRAWER = get_path('imagens/icones/gaveta cheia.png')
 
 # ==============================================================================
 # DIÁLOGOS DE ZOOM (OVERLAYS)

@@ -11,7 +11,7 @@ class GameEngine:
     """
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption("A Maldicao Criptica - Investigacao SOC 2026")
+        pygame.display.set_caption("Vazamento Critico - Investigacao SOC 2026")
         
         self.screen_w = config.SCREEN_W
         self.screen_h = config.SCREEN_H
@@ -29,19 +29,19 @@ class GameEngine:
         self.oy = (self.screen_h - self.canvas_h) // 2
         
         # Carrega fontes retro utilizando a fonte pixel VT323
-        font_path = "fontes/VT323-Regular.ttf"
+        font_path = config.get_path("fontes/VT323-Regular.ttf")
         try:
             self.font_title = pygame.font.Font(font_path, 48)
             self.font_ui = pygame.font.Font(font_path, 24)
             self.font_text = pygame.font.Font(font_path, 26)
-            self.font_word = pygame.font.Font(font_path, 20)
+            self.font_word = pygame.font.Font(font_path, 24)
             self.font_victory = pygame.font.Font(font_path, 24)
         except Exception as e:
             print("Erro ao carregar fonte VT323, usando consolas:", e)
             self.font_title = pygame.font.SysFont("consolas", 40, bold=True)
             self.font_ui = pygame.font.SysFont("consolas", 18, bold=True)
             self.font_text = pygame.font.SysFont("consolas", 20)
-            self.font_word = pygame.font.SysFont("consolas", 16, bold=True)
+            self.font_word = pygame.font.SysFont("consolas", 18, bold=True)
             self.font_victory = pygame.font.SysFont("consolas", 18)
         
         # Inicializa os slots de investigação no Terminal de Sentenças
@@ -158,7 +158,7 @@ class GameEngine:
         self.canvas.fill(config.COLOR_BG)
 
         # Título principal do jogo
-        title_surf = self.font_title.render("A MALDICAO CRIPTICA", True, config.COLOR_AMBER)
+        title_surf = self.font_title.render("VAZAMENTO CRITICO", True, config.COLOR_AMBER)
         title_rect = title_surf.get_rect(centerx=config.CANVAS_W // 2, top=15)
         self.canvas.blit(title_surf, title_rect)
         
@@ -167,7 +167,7 @@ class GameEngine:
         pygame.draw.rect(self.canvas, config.COLOR_ZOOM_BORDER, (35, 25, 190, 45), 2)
         self.draw_bag_icon(self.canvas, 45, 35)
         clues_count = len(self.world.discovered_words)
-        clues_surf = self.font_ui.render(f"PISTAS: {clues_count}/15", True, config.COLOR_AMBER)
+        clues_surf = self.font_ui.render(f"PISTAS: {clues_count}/16", True, config.COLOR_AMBER)
         self.canvas.blit(clues_surf, (78, 38))
 
         # Botão abrir terminal de sentenças

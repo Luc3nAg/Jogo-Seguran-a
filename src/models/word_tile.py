@@ -11,7 +11,7 @@ class WordTile:
         self.arrastando = False
         
         # Calcula dimensões com base na renderização de texto
-        text_surf = self.font.render(self.text, False, (0, 0, 0))
+        text_surf = self.font.render(self.text, True, (0, 0, 0))
         self.width = text_surf.get_width() + 14
         self.height = text_surf.get_height() + 8
         
@@ -53,7 +53,7 @@ class WordTile:
         pygame.draw.rect(surface, config.COLOR_AMBER_DARK, plate_rect, 1)  # Borda externa escura
         
         # Renderização do texto da pista
-        text_surf = self.font.render(self.text, False, config.COLOR_CLUE_SHADOW)
+        text_surf = self.font.render(self.text, True, config.COLOR_CLUE_SHADOW)
         
         # Ajusta/Redimensiona a largura do texto caso ele exceda a largura útil da placa (evitando overflow)
         max_text_w = draw_w - 10
