@@ -8,6 +8,26 @@ class World:
     Gerencia o estado do cenário do jogo, os hotspots interativos,
     as overlays de zoom e as interações com o mouse.
     """
+    def _load_img(self, path, convert_alpha=False):
+        try:
+            img = pygame.image.load(path)
+            return img.convert_alpha() if convert_alpha else img.convert()
+        except Exception as e:
+            print(f"Erro ao carregar {path}: {e}")
+            return None
+
+    def _load_frames(self, path_template, count):
+        frames = []
+        try:
+            for i in range(1, count + 1):
+                img = pygame.image.load(path_template.format(i=i)).convert_alpha()
+                if img.get_at((0, 0))[:3] == (0, 0, 0):
+                    img.set_colorkey((0, 0, 0))
+                frames.append(img)
+        except Exception as e:
+            print(f"Erro ao carregar frames para {path_template}: {e}")
+        return frames
+
     def __init__(self, font_ui: pygame.font.Font, font_text: pygame.font.Font, font_word: pygame.font.Font):
         self.font_ui = font_ui
         self.font_text = font_text
@@ -18,66 +38,24 @@ class World:
         self.play_offset_y = config.PLAY_OFFSET_Y
         
         # Carrega o cenário de fundo
-        try:
-            self.background = pygame.image.load(config.PATH_BG).convert()
+        self.background = self._load_img(config.PATH_BG)
+        if self.background:
             if self.background.get_size() != (config.PLAY_W, config.PLAY_H):
                 self.background = pygame.transform.scale(self.background, (config.PLAY_W, config.PLAY_H))
-        except Exception as e:
+        else:
             self.background = pygame.Surface((config.PLAY_W, config.PLAY_H))
             self.background.fill((40, 40, 40))
-            print("Erro ao carregar imagem de cenário de fundo:", e)
             
-        # Carrega os sprites animados do Chefe
-        self.boss_frames = []
-        self.boss_zoom = None
-        try:
-            for i in range(1, 11):
-                img = pygame.image.load(config.PATH_SPRITES_BOSS.format(i=i)).convert_alpha()
-                if img.get_at((0, 0))[:3] == (0, 0, 0):
-                    img.set_colorkey((0, 0, 0))
-                self.boss_frames.append(img)
-            if self.boss_frames:
-                self.boss_zoom = pygame.transform.scale(self.boss_frames[0], (200, 208))
-            print(f"Loaded {len(self.boss_frames)} frames for boss.")
-        except Exception as e:
-            print("Failed to load boss anim frames:", e)
-
-        # Carrega os sprites animados do Estagiário
-        self.estagiario_frames = []
-        try:
-            for i in range(1, 3):
-                img = pygame.image.load(config.PATH_SPRITES_INTERN.format(i=i)).convert_alpha()
-                if img.get_at((0, 0))[:3] == (0, 0, 0):
-                    img.set_colorkey((0, 0, 0))
-                self.estagiario_frames.append(img)
-            print(f"Loaded {len(self.estagiario_frames)} frames for estagiario.")
-        except Exception as e:
-            print("Erro ao carregar sprites do estagiario:", e)
+        # Carrega os sprites animados
+        self.boss_frames = self._load_frames(config.PATH_SPRITES_BOSS, 10)
+        self.boss_zoom = pygame.transform.scale(self.boss_frames[0], (200, 208)) if self.boss_frames else None
+        self.estagiario_frames = self._load_frames(config.PATH_SPRITES_INTERN, 2)
             
         # Carrega sprites adicionais de objetos e ícones
-        try:
-            self.pendrive_image = pygame.image.load(config.PATH_PENDRIVE).convert_alpha()
-        except Exception as e:
-            self.pendrive_image = None
-            print("Erro ao carregar pendrive.png:", e)
-            
-        try:
-            self.notepad_image = pygame.image.load(config.PATH_NOTEPAD).convert_alpha()
-        except Exception as e:
-            self.notepad_image = None
-            print("Erro ao carregar bloc_de_notas.png:", e)
-
-        try:
-            self.icon_boss = pygame.image.load(config.PATH_ICON_BOSS).convert_alpha()
-        except Exception as e:
-            self.icon_boss = None
-            print("Erro ao carregar icone chefe.png:", e)
-
-        try:
-            self.icon_drawer = pygame.image.load(config.PATH_ICON_DRAWER).convert_alpha()
-        except Exception as e:
-            self.icon_drawer = None
-            print("Erro ao carregar gaveta cheia.png:", e)
+        self.pendrive_image = self._load_img(config.PATH_PENDRIVE, convert_alpha=True)
+        self.notepad_image = self._load_img(config.PATH_NOTEPAD, convert_alpha=True)
+        self.icon_boss = self._load_img(config.PATH_ICON_BOSS, convert_alpha=True)
+        self.icon_drawer = self._load_img(config.PATH_ICON_DRAWER, convert_alpha=True)
             
         # Hitboxes configuradas de acordo com o cenário devs e o roteiro (depuração do usuário)
         self.hotspots = [
@@ -89,6 +67,7 @@ class World:
             Hotspot("logs_de_acesso", "Logs de Acesso (PC do Chefe)", pygame.Rect(29, 350, 66, 59)),
             Hotspot("clock", "Relogio de Parede", pygame.Rect(639, 126, 100, 119)),
         ]
+        self.hotspots_dict = {hs.name: hs for hs in self.hotspots}
         
         # Configurações dinâmicas de overlay
         self.overlays_data = config.OVERLAYS_DATA
@@ -188,39 +167,35 @@ class World:
         surface.blit(self.background, (self.play_offset_x, self.play_offset_y))
         
         # 2. Desenha o Kanban
-        kanban_hs = next((h for h in self.hotspots if h.name == "bulletin_board"), None)
+        kanban_hs = self.hotspots_dict.get("bulletin_board")
         if kanban_hs:
             self.draw_kanban_board(surface, kanban_hs.rect)
             
         # 3. Desenha o Chefe animado (baseado na hitbox do Veterano)
-        if self.boss_frames:
-            vet_hs = next((h for h in self.hotspots if h.name == "veteran"), None)
-            if vet_hs:
-                frame_idx = (pygame.time.get_ticks() // 100) % len(self.boss_frames)
-                boss_surf = pygame.transform.scale(self.boss_frames[frame_idx], (vet_hs.rect.width, vet_hs.rect.height))
-                surface.blit(boss_surf, (vet_hs.rect.x + self.play_offset_x, vet_hs.rect.y + self.play_offset_y))
+        vet_hs = self.hotspots_dict.get("veteran")
+        if self.boss_frames and vet_hs:
+            frame_idx = (pygame.time.get_ticks() // 100) % len(self.boss_frames)
+            boss_surf = pygame.transform.scale(self.boss_frames[frame_idx], (vet_hs.rect.width, vet_hs.rect.height))
+            surface.blit(boss_surf, (vet_hs.rect.x + self.play_offset_x, vet_hs.rect.y + self.play_offset_y))
                 
         # 4. Desenha o Estagiário animado (baseado na hitbox do Estagiário)
-        if self.estagiario_frames:
-            estag_hs = next((h for h in self.hotspots if h.name == "estagiario"), None)
-            if estag_hs:
-                frame_idx = (pygame.time.get_ticks() // 300) % len(self.estagiario_frames)
-                estag_surf = pygame.transform.scale(self.estagiario_frames[frame_idx], (estag_hs.rect.width, estag_hs.rect.height))
-                surface.blit(estag_surf, (estag_hs.rect.x + self.play_offset_x, estag_hs.rect.y + self.play_offset_y))
+        estag_hs = self.hotspots_dict.get("estagiario")
+        if self.estagiario_frames and estag_hs:
+            frame_idx = (pygame.time.get_ticks() // 300) % len(self.estagiario_frames)
+            estag_surf = pygame.transform.scale(self.estagiario_frames[frame_idx], (estag_hs.rect.width, estag_hs.rect.height))
+            surface.blit(estag_surf, (estag_hs.rect.x + self.play_offset_x, estag_hs.rect.y + self.play_offset_y))
                 
         # 5. Desenha a Gaveta se houver imagem (opcional)
-        if self.pendrive_image:
-            pen_hs = next((h for h in self.hotspots if h.name == "gaveta"), None)
-            if pen_hs:
-                pen_surf = pygame.transform.scale(self.pendrive_image, (pen_hs.rect.width, pen_hs.rect.height))
-                surface.blit(pen_surf, (pen_hs.rect.x + self.play_offset_x, pen_hs.rect.y + self.play_offset_y))
+        pen_hs = self.hotspots_dict.get("gaveta")
+        if self.pendrive_image and pen_hs:
+            pen_surf = pygame.transform.scale(self.pendrive_image, (pen_hs.rect.width, pen_hs.rect.height))
+            surface.blit(pen_surf, (pen_hs.rect.x + self.play_offset_x, pen_hs.rect.y + self.play_offset_y))
                 
         # 6. Desenha o Bloco de Notas (bloc_de_notas.png)
-        if self.notepad_image:
-            bn_hs = next((h for h in self.hotspots if h.name == "postit"), None)
-            if bn_hs:
-                np_surf = pygame.transform.scale(self.notepad_image, (bn_hs.rect.width, bn_hs.rect.height))
-                surface.blit(np_surf, (bn_hs.rect.x + self.play_offset_x, bn_hs.rect.y + self.play_offset_y))
+        bn_hs = self.hotspots_dict.get("postit")
+        if self.notepad_image and bn_hs:
+            np_surf = pygame.transform.scale(self.notepad_image, (bn_hs.rect.width, bn_hs.rect.height))
+            surface.blit(np_surf, (bn_hs.rect.x + self.play_offset_x, bn_hs.rect.y + self.play_offset_y))
         
         # 7. Desenha Destaques ao passar o mouse por cima
         if not self.zoom_overlay and not self.terminal_aberto and not self.debug_mode:
@@ -436,6 +411,17 @@ class World:
             pygame.draw.rect(surface, (0, 0, 0), bg_rect)
             surface.blit(spec_surf, (hs_x + 2, hs_y - 19))
 
+    def _start_drag(self, tile, pos):
+        self.obj_selecionado = tile
+        tile.arrastando = True
+        if tile.slot:
+            tile.slot.item = None
+            tile.slot = None
+        self.drag_offset_x = pos[0] - tile.x
+        self.drag_offset_y = pos[1] - tile.y
+        self.discovered_word_tiles.remove(tile)
+        self.discovered_word_tiles.append(tile)
+
     def clicar(self, pos: tuple) -> bool:
         if self.debug_mode:
             # Edição das hitboxes em modo de debug
@@ -476,27 +462,14 @@ class World:
                 
             for tile in reversed(self.discovered_word_tiles):
                 if tile.rect.collidepoint(pos):
-                    self.obj_selecionado = tile
-                    tile.arrastando = True
-                    if tile.slot:
-                        tile.slot.item = None
-                        tile.slot = None
-                    self.drag_offset_x = pos[0] - tile.x
-                    self.drag_offset_y = pos[1] - tile.y
-                    self.discovered_word_tiles.remove(tile)
-                    self.discovered_word_tiles.append(tile)
+                    self._start_drag(tile, pos)
                     return True
             return True
             
         # 3. Modo exploração normal: Clique sobre palavras na estante ou hotspots (pistas já encaixadas são protegidas)
         for tile in reversed(self.discovered_word_tiles):
             if tile.slot is None and tile.rect.collidepoint(pos):
-                self.obj_selecionado = tile
-                tile.arrastando = True
-                self.drag_offset_x = pos[0] - tile.x
-                self.drag_offset_y = pos[1] - tile.y
-                self.discovered_word_tiles.remove(tile)
-                self.discovered_word_tiles.append(tile)
+                self._start_drag(tile, pos)
                 return True
                 
         for hs in self.hotspots:

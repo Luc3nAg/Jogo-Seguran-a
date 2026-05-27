@@ -67,7 +67,7 @@
  [],
  False,
  False,
- 1779885620,
+ 1779886085,
  [('runw.exe',
    'C:\\Users\\joaov\\Documents\\GitHub\\Jogo-Seguran-a\\venv\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\runw.exe',
    'EXECUTABLE')],
