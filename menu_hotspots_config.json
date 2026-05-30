@@ -1,0 +1,26 @@
+[
+    {
+        "name": "JOGAR",
+        "label": "Botao Jogar",
+        "x": 440,
+        "y": 301,
+        "w": 158,
+        "h": 46
+    },
+    {
+        "name": "CREDITOS",
+        "label": "Botao Creditos",
+        "x": 434,
+        "y": 377,
+        "w": 161,
+        "h": 49
+    },
+    {
+        "name": "SAIR",
+        "label": "Botao Sair",
+        "x": 447,
+        "y": 457,
+        "w": 127,
+        "h": 51
+    }
+]

@@ -1,4 +1,6 @@
 import pygame
+import json
+import os
 from src import config
 from src.models.hotspot import Hotspot
 from src.models.word_tile import WordTile
@@ -58,7 +60,7 @@ class World:
         self.icon_drawer = self._load_img(config.PATH_ICON_DRAWER, convert_alpha=True)
             
         # Hitboxes configuradas de acordo com o cenário devs e o roteiro (depuração do usuário)
-        self.hotspots = [
+        default_hotspots = [
             Hotspot("gaveta", "Gaveta do Chefe", pygame.Rect(12, 428, 56, 93)),
             Hotspot("bulletin_board", "Quadro Kanban", pygame.Rect(463, 182, 146, 143)),
             Hotspot("estagiario", "Estagiario (Acusado)", pygame.Rect(510, 322, 149, 213)),
@@ -67,6 +69,23 @@ class World:
             Hotspot("logs_de_acesso", "Logs de Acesso (PC do Chefe)", pygame.Rect(29, 350, 66, 59)),
             Hotspot("clock", "Relogio de Parede", pygame.Rect(639, 126, 100, 119)),
         ]
+        
+        self.hotspots = []
+        json_path = config.get_path("hotspots_config.json")
+        if os.path.exists(json_path):
+            try:
+                with open(json_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                for item in data:
+                    self.hotspots.append(
+                        Hotspot(item["name"], item["label"], pygame.Rect(item["x"], item["y"], item["w"], item["h"]))
+                    )
+                print(f"Loaded hotspots from {json_path}")
+            except Exception as e:
+                print("Failed to load hotspots_config.json, using defaults:", e)
+                self.hotspots = default_hotspots
+        else:
+            self.hotspots = default_hotspots
         self.hotspots_dict = {hs.name: hs for hs in self.hotspots}
         
         # Configurações dinâmicas de overlay
@@ -119,10 +138,32 @@ class World:
         print("------------------------\n")
         
         try:
-            with open("hotspots_config.txt", "w") as f:
+            txt_path = config.get_path("hotspots_config.txt")
+            with open(txt_path, "w", encoding="utf-8") as f:
                 f.write(code_text)
+            print(f"Saved text layout to {txt_path}")
         except Exception as e:
             print("Failed to write to hotspots_config.txt:", e)
+
+        # Also save to JSON for dynamic loading
+        import json
+        data = []
+        for hs in self.hotspots:
+            data.append({
+                "name": hs.name,
+                "label": hs.label,
+                "x": hs.rect.x,
+                "y": hs.rect.y,
+                "w": hs.rect.width,
+                "h": hs.rect.height
+            })
+        try:
+            json_path = config.get_path("hotspots_config.json")
+            with open(json_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=4, ensure_ascii=False)
+            print(f"Saved JSON layout to {json_path}")
+        except Exception as e:
+            print("Failed to write to hotspots_config.json:", e)
 
     def draw_kanban_board(self, surface: pygame.Surface, rect: pygame.Rect):
         rx = rect.x + self.play_offset_x

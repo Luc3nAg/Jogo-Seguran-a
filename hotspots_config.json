@@ -1,0 +1,58 @@
+[
+    {
+        "name": "gaveta",
+        "label": "Gaveta do Chefe",
+        "x": 12,
+        "y": 428,
+        "w": 56,
+        "h": 93
+    },
+    {
+        "name": "bulletin_board",
+        "label": "Quadro Kanban",
+        "x": 463,
+        "y": 182,
+        "w": 146,
+        "h": 143
+    },
+    {
+        "name": "estagiario",
+        "label": "Estagiario (Acusado)",
+        "x": 510,
+        "y": 322,
+        "w": 149,
+        "h": 213
+    },
+    {
+        "name": "postit",
+        "label": "Post-it no Bloco de Notas",
+        "x": 667,
+        "y": 326,
+        "w": 45,
+        "h": 41
+    },
+    {
+        "name": "veteran",
+        "label": "Chefe Furioso",
+        "x": 191,
+        "y": 294,
+        "w": 190,
+        "h": 240
+    },
+    {
+        "name": "logs_de_acesso",
+        "label": "Logs de Acesso (PC do Chefe)",
+        "x": 29,
+        "y": 350,
+        "w": 66,
+        "h": 59
+    },
+    {
+        "name": "clock",
+        "label": "Relogio de Parede",
+        "x": 639,
+        "y": 126,
+        "w": 100,
+        "h": 119
+    }
+]

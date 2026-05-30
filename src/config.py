@@ -77,6 +77,7 @@ COLOR_DEBUG_SELECTED_BORDER = (50, 220, 255)
 # CAMINHOS E ASSETS
 # ==============================================================================
 PATH_BG = get_path('imagens/cenario.png')
+PATH_MENU = get_path('imagens/MENU.png')
 PATH_PENDRIVE = get_path('imagens/pendrive.png')
 PATH_NOTEPAD = get_path('imagens/bloc_de_notas.png')
 PATH_SPRITES_BOSS = get_path('imagens/sprites chefe/chefe-idle{i}.png')
