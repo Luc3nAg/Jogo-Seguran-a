@@ -121,6 +121,36 @@ class GameEngine:
         else:
             self.menu_hotspots = default_menu_hotspots
 
+        # Inicializa o cursor de lupa customizado para os hotspots do jogo
+        try:
+            self.lupa_cursor = self.create_lupa_cursor()
+        except Exception as e:
+            print("Erro ao criar cursor de lupa:", e)
+            self.lupa_cursor = pygame.SYSTEM_CURSOR_HAND
+
+    def create_lupa_cursor(self):
+        # Cria uma superfície 32x32 com canal alfa
+        surf = pygame.Surface((32, 32), pygame.SRCALPHA)
+        
+        # Desenha a lupa em estilo pixel art com cores harmônicas e tamanho ampliado
+        # Borda preta externa para contraste e contorno
+        pygame.draw.circle(surf, (0, 0, 0), (10, 10), 9, 2)
+        # Borda verde brilhante (CRT Green)
+        pygame.draw.circle(surf, (0, 230, 70), (10, 10), 8, 2)
+        # Preenchimento de vidro translúcido
+        pygame.draw.circle(surf, (0, 230, 70, 70), (10, 10), 6)
+        
+        # Cabo diagonal (estende-se de 15,15 a 28,28)
+        # Contorno preto grosso do cabo
+        pygame.draw.line(surf, (0, 0, 0), (15, 15), (28, 28), 5)
+        # Miolo do cabo em cinza metálico/branco
+        pygame.draw.line(surf, (220, 220, 220), (16, 16), (27, 27), 3)
+        # Detalhe em ouro/âmbar na ponta do cabo
+        pygame.draw.line(surf, (235, 195, 80), (24, 24), (27, 27), 3)
+        
+        # Retorna o cursor com o hotspot no centro da lente (10, 10)
+        return pygame.cursors.Cursor((10, 10), surf)
+
     def draw_bag_icon(self, surface: pygame.Surface, x: int, y: int):
         # Alça da bolsa
         pygame.draw.rect(surface, (100, 75, 45), (x + 6, y + 2, 12, 4))
@@ -157,8 +187,9 @@ class GameEngine:
             int((mouse_fisica[1] - self.oy) / self.scale_factor)
         )
         
-        # Detect hover over interactive elements to set hand cursor
+        # Detect hover over interactive elements to set hand/magnifier cursor
         hover_interactive = False
+        hover_hotspot = False
         
         if self.state == "MENU":
             # Get hotspots from self.menu_hotspots
@@ -229,9 +260,11 @@ class GameEngine:
                                                  hs.rect.y + self.world.play_offset_y, 
                                                  hs.rect.width, hs.rect.height)
                     if screen_hs_rect.collidepoint(mouse):
-                        hover_interactive = True
+                        hover_hotspot = True
 
-        if hover_interactive:
+        if hover_hotspot:
+            pygame.mouse.set_cursor(self.lupa_cursor)
+        elif hover_interactive:
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
         else:
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)

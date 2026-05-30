@@ -84,6 +84,7 @@ PATH_SPRITES_BOSS = get_path('imagens/sprites chefe/chefe-idle{i}.png')
 PATH_SPRITES_INTERN = get_path('imagens/sprites estagiario/estagiario-idle{i}.png')
 PATH_ICON_BOSS = get_path('imagens/icones/icone chefe.png')
 PATH_ICON_DRAWER = get_path('imagens/icones/gaveta cheia.png')
+PATH_ICON_INTERN = get_path('imagens/estagiario icon.png')
 
 # ==============================================================================
 # DIÁLOGOS DE ZOOM (OVERLAYS)

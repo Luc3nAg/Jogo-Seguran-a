@@ -58,6 +58,7 @@ class World:
         self.notepad_image = self._load_img(config.PATH_NOTEPAD, convert_alpha=True)
         self.icon_boss = self._load_img(config.PATH_ICON_BOSS, convert_alpha=True)
         self.icon_drawer = self._load_img(config.PATH_ICON_DRAWER, convert_alpha=True)
+        self.icon_intern = self._load_img(config.PATH_ICON_INTERN, convert_alpha=True)
             
         # Hitboxes configuradas de acordo com o cenário devs e o roteiro (depuração do usuário)
         default_hotspots = [
@@ -242,15 +243,6 @@ class World:
         if not self.zoom_overlay and not self.terminal_aberto and not self.debug_mode:
             for hs in self.hotspots:
                 if hs.hovered:
-                    # Preenchimento translúcido
-                    highlight_surf = pygame.Surface((hs.rect.width, hs.rect.height), pygame.SRCALPHA)
-                    highlight_surf.fill(config.COLOR_HOVER_FILL)
-                    surface.blit(highlight_surf, (hs.rect.x + self.play_offset_x, hs.rect.y + self.play_offset_y))
-                    
-                    # Contorno
-                    pygame.draw.rect(surface, config.COLOR_HOVER_BORDER, 
-                                     (hs.rect.x + self.play_offset_x, hs.rect.y + self.play_offset_y, hs.rect.width, hs.rect.height), 2)
-                    
                     # Tooltip informativa
                     tooltip = self.font_ui.render(hs.label, True, (255, 255, 255))
                     shadow = self.font_ui.render(hs.label, True, (0, 0, 0))
@@ -343,9 +335,13 @@ class World:
                     surface.blit(boss_icon_scaled, (ox + 480, oy + 110))
                 elif self.boss_zoom:
                     surface.blit(self.boss_zoom, (ox + 450, oy + 110))
-            elif self.zoom_overlay == "estagiario" and self.estagiario_frames:
-                estag_zoom = pygame.transform.scale(self.estagiario_frames[0], (150, 200))
-                surface.blit(estag_zoom, (ox + 480, oy + 110))
+            elif self.zoom_overlay == "estagiario":
+                if self.icon_intern:
+                    intern_icon_scaled = pygame.transform.scale(self.icon_intern, (150, 150))
+                    surface.blit(intern_icon_scaled, (ox + 480, oy + 110))
+                elif self.estagiario_frames:
+                    estag_zoom = pygame.transform.scale(self.estagiario_frames[0], (150, 200))
+                    surface.blit(estag_zoom, (ox + 480, oy + 110))
             elif self.zoom_overlay == "gaveta" and self.icon_drawer:
                 drawer_icon_scaled = pygame.transform.scale(self.icon_drawer, (150, 150))
                 surface.blit(drawer_icon_scaled, (ox + 480, oy + 110))
