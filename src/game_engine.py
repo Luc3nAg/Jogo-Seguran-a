@@ -225,7 +225,7 @@ class GameEngine:
                     self.menu_hovered_btn = None
                 
         elif self.state == "CREDITS":
-            rect_voltar = pygame.Rect(384, 550, 256, 54)
+            rect_voltar = pygame.Rect(384, 640, 256, 54)
             if rect_voltar.collidepoint(mouse):
                 self.credits_hovered_btn = True
                 hover_interactive = True
@@ -506,7 +506,10 @@ class GameEngine:
             ("INVESTIGACAO SOC 2026: VAZAMENTO CRITICO", c_green_lite, True),
             ("", c_green, False),
             ("DESENVOLVIDO POR:", c_green_lite, False),
-            ("Luc3nAg (GitHub: Luc3nAg/Jogo-Seguran-a)", c_green, False),
+            ("João Vitor Teixeira", c_green, False),
+            ("Hiago Oliveira", c_green, False),
+            ("Gustavo Lucena", c_green, False),
+            ("Iago Cordeiro", c_green, False),
             ("", c_green, False),
             ("TECNOLOGIAS UTILIZADAS:", c_green_lite, False),
             ("Python 3 & Pygame Library", c_green, False),
@@ -530,7 +533,7 @@ class GameEngine:
             sy += 30
             
         # Botão Voltar
-        rect_voltar = pygame.Rect(384, 550, 256, 54)
+        rect_voltar = pygame.Rect(384, 640, 256, 54)
         bg_btn = config.COLOR_CRT_BG_BUTTON
         border_color = config.COLOR_CRT_GREEN
         if self.credits_hovered_btn:
